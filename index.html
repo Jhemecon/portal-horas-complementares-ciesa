@@ -158,54 +158,54 @@
       */
       
       @media (max-width: 600px) {
-        
-        /* [MUDANÇA V1.13] */
-        body {
-          /* A regra 'align-items: flex-start;' FOI REMOVIDA.
-           Agora o body do mobile herda 'align-items: center' da regra 
-           principal, centralizando verticalmente o contêiner.
-          */
-          padding: 0; /* Remove o padding do desktop */
-        }
+  body {
+    padding: 0;
+  }
 
-        #portal-container {
-          padding: 15px; 
-          margin: 0; /* Ocupa a tela toda */
-          border: none;
-          box-shadow: none;
-          border-radius: 0;
-          /* Faz o contêiner ocupar a altura total */
-          height: 100vh;
-          
-          /* Adiciona rolagem interna se o conteúdo estourar */
-          overflow-y: auto; 
-        }
-        
-        #input-area {
-          flex-direction: column; /* Empilha verticalmente */
-        }
-        
-        #btn-buscar {
-          width: 100%; /* Largura total */
-        }
-        
-        h1 {
-          font-size: 24px;
-        }
-        
-        #total-card h2 {
-          font-size: 30px;
-        }
-        
-        #category-list li {
-          flex-direction: column; /* Empilha o texto da categoria e as horas */
-          align-items: flex-start;
-        }
-        #category-list span {
-          padding-left: 0;
-          margin-top: 5px;
-        }
-      }
+  #portal-container {
+    padding: 15px;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    height: 100vh;
+    overflow-y: auto;
+
+    /* centraliza VERTICALMENTE, sem centralizar horizontalmente */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centraliza verticalmente */
+    align-items: stretch;    /* ocupa a largura disponível (não centraliza horizontal) */
+  }
+
+  /* garantir que os elementos internos ocupem a largura total */
+  #input-area {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  #matricula,
+  #btn-buscar,
+  #results-area,
+  #total-card,
+  #category-details {
+    width: 100%;
+    max-width: none; /* ou ajuste para um valor se quiser limitar a largura */
+  }
+
+  h1 { font-size: 24px; }
+  #total-card h2 { font-size: 30px; }
+
+  #category-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #category-list span {
+    padding-left: 0;
+    margin-top: 5px;
+  }
+}
       
     </style>
   </head>
