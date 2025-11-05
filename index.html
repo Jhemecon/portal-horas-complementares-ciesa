@@ -10,17 +10,31 @@
       *, *:before, *:after {
         box-sizing: border-box;
       }
+      
+      /* [NOVA MUDANÇA] */
+      html, body {
+        height: 100%; /* Faz o HTML e o Body ocuparem 100% da altura */
+        margin: 0;
+      }
+
       body { 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-        margin: 0; 
         background-color: #f4f7f6;
         color: #333;
+        
+        /* [NOVA MUDANÇA] Usa Flexbox para centralizar o contêiner */
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center;    /* Centraliza verticalmente */
+        padding: 20px; /* Adiciona um respiro nas bordas */
       }
       
       /* --- Layout Principal --- */
       #portal-container {
         max-width: 700px;
-        margin: 20px auto; /* Centraliza no desktop */
+        width: 100%; /* Ocupa 100% da largura (até o max-width) */
+        /* [MUDANÇA] A margem 'auto' não é mais necessária */
+        /* margin: 20px auto; */
         padding: 25px;
         background-color: #ffffff;
         border: 1px solid #ddd;
@@ -45,12 +59,12 @@
       }
       
       #matricula {
-        flex-grow: 1; /* Ocupa o espaço disponível */
+        flex-grow: 1; 
         font-size: 16px;
         padding: 12px;
         border-radius: 5px;
         border: 1px solid #ccc;
-        width: 100%; /* Ajuda na responsividade */
+        width: 100%; 
       }
       
       #btn-buscar {
@@ -79,16 +93,16 @@
       }
       #loading { 
         color: #555; 
-        display: none; /* Começa escondido */
+        display: none;
       }
       #error { 
         color: #d9534f; 
         font-weight: bold;
-        display: none; /* Começa escondido */
+        display: none;
       }
       
       #results-area { 
-        display: none; /* Começa escondido */
+        display: none;
       }
       
       /* Card de Total */
@@ -102,7 +116,7 @@
       }
       #total-card h2 {
         margin: 0 0 10px 0;
-        color: #0028a5; /* corAzulCiesa */
+        color: #0028a5; 
         font-size: 36px;
       }
       #total-card p {
@@ -125,6 +139,9 @@
         list-style-type: none;
         padding-left: 0;
         font-size: 14px;
+        /* [NOVA MUDANÇA] Adiciona scroll se a lista for muito longa */
+        max-height: 200px;
+        overflow-y: auto;
       }
       #category-list li {
         display: flex;
@@ -140,26 +157,25 @@
         font-weight: bold; 
         color: #0028a5; 
         font-size: 16px;
-        white-space: nowrap; /* Impede que as horas quebrem linha */
+        white-space: nowrap;
         padding-left: 15px;
       }
 
       /*
       ===============================================
       == BLOCO DE RESPONSIVIDADE (MOBILE)
-      == (Isto vai funcionar no GitHub Pages)
       ===============================================
       */
       
       @media (max-width: 600px) {
-        body {
-          margin: 0;
-        }
+        /* [NOVA MUDANÇA] Remove a borda/sombra no mobile para tela cheia */
         #portal-container {
           padding: 15px; 
-          margin: 10px; 
+          margin: 0; 
           border: none;
           box-shadow: none;
+          height: 100%; /* Faz o container ocupar a altura toda no mobile */
+          border-radius: 0;
         }
         
         #input-area {
@@ -185,6 +201,12 @@
         #category-list span {
           padding-left: 0;
           margin-top: 5px;
+        }
+        
+        /* [NOVA MUDANÇA] Faz o body e o container se ajustarem no mobile */
+        body {
+          padding: 0;
+          align-items: flex-start; /* Alinha no topo no mobile */
         }
       }
       
