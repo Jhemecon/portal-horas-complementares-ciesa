@@ -11,7 +11,6 @@
         box-sizing: border-box;
       }
       
-      /* [MUDANÇA V1.12] */
       html, body {
         height: 100%; /* Ocupa a altura total */
         margin: 0;
@@ -22,20 +21,17 @@
         background-color: #f4f7f6;
         color: #333;
         
-        /* [MUDANÇA V1.12] Voltamos ao Flex para centralizar verticalmente no Desktop */
+        /* Flexbox para centralizar o contêiner vertical e horizontalmente */
         display: flex;
         justify-content: center; /* Centraliza horizontalmente */
         align-items: center;    /* Centraliza verticalmente */
-        padding: 20px; /* Adiciona um respiro nas bordas do desktop */
+        padding: 20px; /* Respiro nas bordas do desktop */
       }
       
       /* --- Layout Principal --- */
       #portal-container {
         max-width: 700px;
-        width: 100%; /* Ocupa 100% da largura (até o max-width) */
-        
-        /* A margem 'auto' não é mais necessária */
-        
+        width: 100%; 
         padding: 25px;
         background-color: #ffffff;
         border: 1px solid #ddd;
@@ -134,7 +130,7 @@
         list-style-type: none;
         padding-left: 0;
         font-size: 14px;
-        max-height: 250px; /* Scroll se a lista for longa */
+        max-height: 250px; 
         overflow-y: auto;
       }
       #category-list li {
@@ -163,12 +159,13 @@
       
       @media (max-width: 600px) {
         
-        /* [MUDANÇA V1.12] */
+        /* [MUDANÇA V1.13] */
         body {
-          /* Anula a centralização vertical do flex */
-          align-items: flex-start; 
-          /* Remove o padding do desktop */
-          padding: 0;
+          /* A regra 'align-items: flex-start;' FOI REMOVIDA.
+           Agora o body do mobile herda 'align-items: center' da regra 
+           principal, centralizando verticalmente o contêiner.
+          */
+          padding: 0; /* Remove o padding do desktop */
         }
 
         #portal-container {
@@ -177,8 +174,11 @@
           border: none;
           box-shadow: none;
           border-radius: 0;
-          /* Garante que o contêiner ocupe pelo menos a altura da tela */
-          min-height: 100vh;
+          /* Faz o contêiner ocupar a altura total */
+          height: 100vh;
+          
+          /* Adiciona rolagem interna se o conteúdo estourar */
+          overflow-y: auto; 
         }
         
         #input-area {
@@ -242,7 +242,7 @@
     <script>
       //
       // [ AÇÃO NECESSÁRIA ]
-      // Cole a URL da sua implantação /exec AQUI
+      // Mantenha a URL da sua API /exec aqui
       //
       const API_URL = "https://script.google.com/macros/s/AKfycbxf2Ku_PGhVFUwCq5tSAP9GFIy8-FAiQ7azmhNugwJDUtERJ9D3pheGfEAvc1FZ5ilZMA/exec";
 
@@ -340,7 +340,7 @@
       function showError(errorMsg) {
         loadingDiv.style.display = 'none';
         var msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
-        errorDiv.textContent = "Erro: " + msg;
+        errorDiv.textContent = "Erro: "Sua solicitação de horas complementares foi analisada e está com uma pendência" + msg;
         errorDiv.style.display = 'block';
       }
     </script>
