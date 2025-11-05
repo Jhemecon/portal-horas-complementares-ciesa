@@ -11,21 +11,30 @@
         box-sizing: border-box;
       }
       
-      /* [MUDANÇA V1.11] */
+      /* [MUDANÇA V1.12] */
+      html, body {
+        height: 100%; /* Ocupa a altura total */
+        margin: 0;
+      }
+
       body { 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-        margin: 0; 
         background-color: #f4f7f6;
         color: #333;
-        /* O display:flex FOI REMOVIDO DAQUI. */
+        
+        /* [MUDANÇA V1.12] Voltamos ao Flex para centralizar verticalmente no Desktop */
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center;    /* Centraliza verticalmente */
+        padding: 20px; /* Adiciona um respiro nas bordas do desktop */
       }
       
       /* --- Layout Principal --- */
       #portal-container {
         max-width: 700px;
+        width: 100%; /* Ocupa 100% da largura (até o max-width) */
         
-        /* [MUDANÇA V1.11] A forma clássica de centralizar horizontalmente. */
-        margin: 20px auto; 
+        /* A margem 'auto' não é mais necessária */
         
         padding: 25px;
         background-color: #ffffff;
@@ -77,7 +86,7 @@
         cursor: not-allowed;
       }
       
-      /* --- Área de Status/Resultados --- */
+      /* --- Área de Status/Resultados (sem mudança) --- */
       #status-message { 
         text-align: center; 
         font-size: 18px; 
@@ -85,19 +94,16 @@
       }
       #loading { 
         color: #555; 
-        display: none; 
+        display: none;
       }
       #error { 
         color: #d9534f; 
         font-weight: bold;
-        display: none; 
+        display: none;
       }
-      
       #results-area { 
-        display: none; 
+        display: none;
       }
-      
-      /* Card de Total */
       #total-card {
         background-color: #f4f7f6;
         border: 1px solid #ddd;
@@ -108,7 +114,7 @@
       }
       #total-card h2 {
         margin: 0 0 10px 0;
-        color: #0028a5; /* corAzulCiesa */
+        color: #0028a5; 
         font-size: 36px;
       }
       #total-card p {
@@ -116,8 +122,6 @@
         font-size: 18px;
         color: #333;
       }
-      
-      /* Detalhes de Categoria */
       #category-details { 
         margin-top: 30px; 
       }
@@ -126,13 +130,11 @@
         border-bottom: 1px solid #eee;
         padding-bottom: 5px;
       }
-      
       #category-list {
         list-style-type: none;
         padding-left: 0;
         font-size: 14px;
-        /* Scroll se a lista for muito longa */
-        max-height: 250px;
+        max-height: 250px; /* Scroll se a lista for longa */
         overflow-y: auto;
       }
       #category-list li {
@@ -149,7 +151,7 @@
         font-weight: bold; 
         color: #0028a5; 
         font-size: 16px;
-        white-space: nowrap; 
+        white-space: nowrap;
         padding-left: 15px;
       }
 
@@ -161,15 +163,21 @@
       
       @media (max-width: 600px) {
         
-        /* [MUDANÇA V1.11] */
+        /* [MUDANÇA V1.12] */
+        body {
+          /* Anula a centralização vertical do flex */
+          align-items: flex-start; 
+          /* Remove o padding do desktop */
+          padding: 0;
+        }
+
         #portal-container {
-          /* Anula as regras do desktop para virar "tela cheia" */
-          margin: 0;
           padding: 15px; 
+          margin: 0; /* Ocupa a tela toda */
           border: none;
           box-shadow: none;
           border-radius: 0;
-          /* Garante que ele preencha a tela se o conteúdo for curto */
+          /* Garante que o contêiner ocupe pelo menos a altura da tela */
           min-height: 100vh;
         }
         
@@ -232,8 +240,9 @@
     </div>
     
     <script>
+      //
       // [ AÇÃO NECESSÁRIA ]
-      // Mantenha a URL da sua API /exec aqui
+      // Cole a URL da sua implantação /exec AQUI
       //
       const API_URL = "https://script.google.com/macros/s/AKfycbxf2Ku_PGhVFUwCq5tSAP9GFIy8-FAiQ7azmhNugwJDUtERJ9D3pheGfEAvc1FZ5ilZMA/exec";
 
@@ -257,9 +266,6 @@
         }
       });
 
-      /**
-       * Função principal que chama a API
-       */
       async function buscarDados() {
         var matricula = matriculaInput.value.trim();
         if (!matricula) {
@@ -267,7 +273,6 @@
           return;
         }
 
-        // Reseta a interface
         loadingDiv.style.display = 'block';
         errorDiv.style.display = 'none';
         resultsDiv.style.display = 'none';
@@ -275,7 +280,6 @@
         buscarBtn.textContent = 'Buscando...';
 
         try {
-          // Chama a API do Google Apps Script
           const response = await fetch(`${API_URL}?matricula=${encodeURIComponent(matricula)}`, { cache: 'no-store' });
           
           if (!response.ok) {
@@ -293,32 +297,27 @@
         } catch (err) {
           showError(err && err.message ? err.message : String(err));
         } finally {
-          // Reabilita o botão
           loadingDiv.style.display = 'none';
           buscarBtn.disabled = false;
           buscarBtn.textContent = 'Buscar';
         }
       }
       
-      /**
-       * Preenche a página com os dados do aluno
-       */
       function showData(data) {
         const total = Number(data && data.totalGeral) || 0;
         totalHorasH2.textContent = total + " horas";
         statusAlunoP.textContent = "Status: " + (data && data.status ? data.status : "Desconhecido");
         
-        var meta = 140; // Meta de horas
+        var meta = 140; 
         if (total >= meta) {
           horasFaltantesP.textContent = "Parabéns, você atingiu a meta!";
-          totalHorasH2.style.color = "#65d340"; // corVerdeCiesa
+          totalHorasH2.style.color = "#65d340"; 
         } else {
           var faltantes = meta - total;
           horasFaltantesP.textContent = "Faltam " + faltantes + " horas para a meta.";
-          totalHorasH2.style.color = "#0028a5"; // corAzulCiesa
+          totalHorasH2.style.color = "#0028a5";
         }
         
-        // Limpa e preenche a lista de categorias
         categoryListUl.innerHTML = ""; 
         
         const categorias = Array.isArray(data && data.categorias) ? data.categorias : [];
@@ -338,9 +337,6 @@
         resultsDiv.style.display = 'block';
       }
       
-      /**
-       * Mostra uma mensagem de erro
-       */
       function showError(errorMsg) {
         loadingDiv.style.display = 'none';
         var msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
