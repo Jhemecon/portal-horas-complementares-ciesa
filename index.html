@@ -339,12 +339,12 @@
       }
       
       function showError(errorMsg) {
-        loadingDiv.style.display = 'none';
-        var msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
-        // Corrigido: concatenando corretamente a mensagem final
-        errorDiv.textContent = "Erro: Sua solicitação de horas complementares foi analisada e está com uma pendência. " + msg;
-        errorDiv.style.display = 'block';
-      }
+  loadingDiv.style.display = 'none';
+  var msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
+  // Corrigido: string concatenada corretamente (antes estava "Erro: "Sua ...)
+  errorDiv.textContent = "Erro: Sua solicitação de horas complementares foi analisada e está com uma pendência. " + msg;
+  errorDiv.style.display = 'block';
+}
     </script>
     
   </body>
