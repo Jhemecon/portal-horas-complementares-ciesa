@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Horas CIESA</title>
+    
+    <style>
+      /* --- Estilos Globais e Reset --- */
+      *, *:before, *:after {
+        box-sizing: border-box;
+      }
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
+        margin: 0; 
+        background-color: #f4f7f6;
+        color: #333;
+      }
+      
+      /* --- Layout Principal --- */
+      #portal-container {
+        max-width: 700px;
+        margin: 20px auto; /* Centraliza no desktop */
+        padding: 25px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      }
+      
+      h1 {
+        color: #0028a5; /* corAzulCiesa */
+        text-align: center;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+        margin-top: 0;
+        font-size: 28px;
+      }
+      
+      /* --- Área de Busca --- */
+      #input-area {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      
+      #matricula {
+        flex-grow: 1; /* Ocupa o espaço disponível */
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%; /* Ajuda na responsividade */
+      }
+      
+      #btn-buscar {
+        font-size: 16px;
+        padding: 12px 20px;
+        background-color: #0028a5; /* corAzulCiesa */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      #btn-buscar:hover { 
+        background-color: #001f80; 
+      }
+      #btn-buscar:disabled {
+        background-color: #999;
+        cursor: not-allowed;
+      }
+      
+      /* --- Área de Status/Resultados --- */
+      #status-message { 
+        text-align: center; 
+        font-size: 18px; 
+        padding: 10px 0;
+      }
+      #loading { 
+        color: #555; 
+        display: none; /* Começa escondido */
+      }
+      #error { 
+        color: #d9534f; 
+        font-weight: bold;
+        display: none; /* Começa escondido */
+      }
+      
+      #results-area { 
+        display: none; /* Começa escondido */
+      }
+      
+      /* Card de Total */
+      #total-card {
+        background-color: #f4f7f6;
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 20px;
+      }
+      #total-card h2 {
+        margin: 0 0 10px 0;
+        color: #0028a5; /* corAzulCiesa */
+        font-size: 36px;
+      }
+      #total-card p {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+      }
+      
+      /* Detalhes de Categoria */
+      #category-details { 
+        margin-top: 30px; 
+      }
+      #category-details h3 {
+        color: #0028a5;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+      }
+      
+      #category-list {
+        list-style-type: none;
+        padding-left: 0;
+        font-size: 14px;
+      }
+      #category-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 5px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      #category-list li:last-child { 
+        border-bottom: 0; 
+      }
+      #category-list span { 
+        font-weight: bold; 
+        color: #0028a5; 
+        font-size: 16px;
+        white-space: nowrap; /* Impede que as horas quebrem linha */
+        padding-left: 15px;
+      }
+
+      /*
+      ===============================================
+      == BLOCO DE RESPONSIVIDADE (MOBILE)
+      == (Isto vai funcionar no GitHub Pages)
+      ===============================================
+      */
+      
+      @media (max-width: 600px) {
+        body {
+          margin: 0;
+        }
+        #portal-container {
+          padding: 15px; 
+          margin: 10px; 
+          border: none;
+          box-shadow: none;
+        }
+        
+        #input-area {
+          flex-direction: column; /* Empilha verticalmente */
+        }
+        
+        #btn-buscar {
+          width: 100%; /* Largura total */
+        }
+        
+        h1 {
+          font-size: 24px;
+        }
+        
+        #total-card h2 {
+          font-size: 30px;
+        }
+        
+        #category-list li {
+          flex-direction: column; /* Empilha o texto da categoria e as horas */
+          align-items: flex-start;
+        }
+        #category-list span {
+          padding-left: 0;
+          margin-top: 5px;
+        }
+      }
+      
+    </style>
+  </head>
+  <body>
+    
+    <div id="portal-container">
+      <h1>Portal de Horas Complementares</h1>
+      
+      <div id="input-area">
+        <input type="text" id="matricula" placeholder="Digite sua Matrícula">
+        <button id="btn-buscar" type="button">Buscar</button>
+      </div>
+      
+      <div id="status-message">
+        <div id="loading">Buscando dados...</div>
+        <div id="error"></div>
+      </div>
+      
+      <div id="results-area">
+        <div id="total-card">
+          <h2 id="total-horas">0 horas</h2>
+          <p id="status-aluno">Status: Pendente</p>
+          <p id="horas-faltantes" style="font-size: 14px; margin-top: 5px;"></p>
+        </div>
+        
+        <div id="category-details">
+          <h3>Detalhamento por Categoria</h3>
+          <ul id="category-list">
+            </ul>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      //
+      // [ AÇÃO NECESSÁRIA ]
+      // Cole a URL da sua implantação /exec AQUI
+      //
+      const API_URL = "https://script.google.com/macros/s/AKfycbxf2Ku_PGhVFUwCq5tSAP9GFIy8-FAiQ7azmhNugwJDUtERJ9D3pheGfEAvc1FZ5ilZMA/exec";
+
+      // Mapeamento dos elementos
+      const matriculaInput = document.getElementById('matricula');
+      const buscarBtn = document.getElementById('btn-buscar');
+      const loadingDiv = document.getElementById('loading');
+      const errorDiv = document.getElementById('error');
+      const resultsDiv = document.getElementById('results-area');
+      const totalHorasH2 = document.getElementById('total-horas');
+      const statusAlunoP = document.getElementById('status-aluno');
+      const horasFaltantesP = document.getElementById('horas-faltantes');
+      const categoryListUl = document.getElementById('category-list');
+
+      // Adiciona listeners para o botão e para a tecla "Enter"
+      buscarBtn.addEventListener('click', buscarDados);
+      matriculaInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault(); 
+          buscarDados();
+        }
+      });
+
+      /**
+       * Função principal que chama a API
+       */
+      async function buscarDados() {
+        var matricula = matriculaInput.value.trim();
+        if (!matricula) {
+          showError("Por favor, digite sua matrícula.");
+          return;
+        }
+
+        // Reseta a interface
+        loadingDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+        resultsDiv.style.display = 'none';
+        buscarBtn.disabled = true; 
+        buscarBtn.textContent = 'Buscando...';
+
+        try {
+          // Chama a API do Google Apps Script (encodeURIComponent para segurança)
+          const response = await fetch(`${API_URL}?matricula=${encodeURIComponent(matricula)}`, { cache: 'no-store' });
+          
+          if (!response.ok) {
+            // Se a resposta da rede não for OK (ex: 500, 404)
+            throw new Error(`Erro de rede: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+
+          if (data && data.error) {
+            // Se a API retornou um erro (ex: matrícula não encontrada)
+            throw new Error(data.message || 'Erro retornado pela API.');
+          }
+          
+          // Se deu tudo certo, mostra os dados (guarda defaults)
+          showData(data || { totalGeral: 0, categorias: [], status: 'Desconhecido' });
+
+        } catch (err) {
+          // Se a rede falhou ou a API deu erro
+          showError(err && err.message ? err.message : String(err));
+        } finally {
+          // Reabilita o botão, independentemente do resultado
+          loadingDiv.style.display = 'none';
+          buscarBtn.disabled = false;
+          buscarBtn.textContent = 'Buscar';
+        }
+      }
+      
+      /**
+       * Preenche a página com os dados do aluno
+       */
+      function showData(data) {
+        const total = Number(data && data.totalGeral) || 0;
+        totalHorasH2.textContent = total + " horas";
+        statusAlunoP.textContent = "Status: " + (data && data.status ? data.status : "Desconhecido");
+        
+        var meta = 140; // Meta de horas
+        if (total >= meta) {
+          horasFaltantesP.textContent = "Parabéns, você atingiu a meta!";
+          totalHorasH2.style.color = "#65d340"; // corVerdeCiesa
+        } else {
+          var faltantes = meta - total;
+          horasFaltantesP.textContent = "Faltam " + faltantes + " horas para a meta.";
+          totalHorasH2.style.color = "#0028a5"; // corAzulCiesa
+        }
+        
+        // Limpa e preenche a lista de categorias
+        categoryListUl.innerHTML = ""; 
+        
+        const categorias = Array.isArray(data && data.categorias) ? data.categorias : [];
+        
+        if (categorias.length === 0) {
+            categoryListUl.innerHTML = "<li>Nenhuma hora computada ainda.</li>";
+        } else {
+          categorias.forEach(function(cat) {
+            var li = document.createElement('li');
+            var nome = cat && cat.nome ? cat.nome : 'Categoria';
+            var horas = Number(cat && cat.horas) || 0;
+            li.innerHTML = nome + " <span>" + horas + " horas</span>";
+            categoryListUl.appendChild(li);
+          });
+        }
+        
+        resultsDiv.style.display = 'block';
+      }
+      
+      /**
+       * Mostra uma mensagem de erro
+       */
+      function showError(errorMsg) {
+        loadingDiv.style.display = 'none';
+        var msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
+        errorDiv.textContent = "Erro: " + msg;
+        errorDiv.style.display = 'block';
+      }
+    </script>
+    
+  </body>
+</html>
