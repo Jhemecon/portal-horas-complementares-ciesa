@@ -6,30 +6,20 @@
     <title>Portal de Horas CIESA</title>
     
     <style>
-        /* --- Estilos Globais e Reset --- */
-        *, *:before, *:after {
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            height: 100%; /* Ocupa a altura total */
-            margin: 0;
-        }
-
+        /* ... (Estilos Globais e Reset) ... */
+        *, *:before, *:after { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
             background-color: #f4f7f6;
             color: #333;
-            
-            /* Flexbox para centralizar o contêiner vertical e horizontalmente */
             display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center;   /* Centraliza verticalmente */
-            padding: 20px; /* Respiro nas bordas do desktop */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
         
-        /* --- Layout Principal --- */
-        /* [MELHORIA DE SEMÂNTICA] Trocado 'div' por 'main' */
+        /* ... (Layout Principal e Cabeçalho) ... */
         #portal-container {
             max-width: 700px;
             width: 100%; 
@@ -39,9 +29,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        
         h1 {
-            color: #0028a5; /* corAzulCiesa */
+            color: #0028a5;
             text-align: center;
             border-bottom: 2px solid #eee;
             padding-bottom: 15px;
@@ -49,13 +38,8 @@
             font-size: 28px;
         }
         
-        /* --- Área de Busca --- */
-        #input-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
+        /* ... (Área de Busca e Botão) ... */
+        #input-area { display: flex; gap: 10px; margin-bottom: 20px; }
         #matricula {
             flex-grow: 1; 
             font-size: 16px;
@@ -64,26 +48,20 @@
             border: 1px solid #ccc;
             width: 100%; 
         }
-        
         #btn-buscar {
             font-size: 16px;
             padding: 12px 20px;
-            background-color: #0028a5; /* corAzulCiesa */
+            background-color: #0028a5;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        #btn-buscar:hover { 
-            background-color: #001f80; 
-        }
-        #btn-buscar:disabled {
-            background-color: #999;
-            cursor: not-allowed;
-        }
+        #btn-buscar:hover { background-color: #001f80; }
+        #btn-buscar:disabled { background-color: #999; cursor: not-allowed; }
 
-        /* [MELHORIA DE ACESSIBILIDADE] Classe para esconder labels visualmente */
+        /* ... (Classe sr-only para Acessibilidade) ... */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -96,24 +74,11 @@
             border: 0;
         }
         
-        /* --- Área de Status/Resultados --- */
-        #status-message { 
-            text-align: center; 
-            font-size: 18px; 
-            padding: 10px 0;
-        }
-        #loading { 
-            color: #555; 
-            display: none;
-        }
-        #error { 
-            color: #d9534f; 
-            font-weight: bold;
-            display: none;
-        }
-        #results-area { 
-            display: none;
-        }
+        /* ... (Área de Status/Resultados) ... */
+        #status-message { text-align: center; font-size: 18px; padding: 10px 0; }
+        #loading { color: #555; display: none; }
+        #error { color: #d9534f; font-weight: bold; display: none; }
+        #results-area { display: none; }
         #total-card {
             background-color: #f4f7f6;
             border: 1px solid #ddd;
@@ -127,14 +92,48 @@
             color: #0028a5; 
             font-size: 36px;
         }
-        #total-card p {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
+        #total-card p { margin: 0; font-size: 18px; color: #333; }
+        
+        /* ==============================================
+        == NOVOS ESTILOS: BARRA DE PROGRESSO
+        ==============================================
+        */
+        #progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef; /* Fundo cinza claro */
+            border-radius: 8px;
+            margin-top: 15px; /* Espaçamento */
+            height: 22px;
+            overflow: hidden; /* Garante que a barra interna não vaze */
+            border: 1px solid #ddd;
         }
-        #category-details { 
-            margin-top: 30px; 
+
+        #progress-bar-fill {
+            height: 100%;
+            width: 0%; /* Começa em 0% */
+            background-color: #0028a5; /* Cor principal */
+            border-radius: 0 8px 8px 0; /* Arredonda só a direita no começo */
+            transition: width 0.5s ease-out, background-color 0.5s ease-out; /* Animação suave */
+            
+            /* Estilos para o texto da porcentagem */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
         }
+
+        /* Classe para quando a meta for atingida */
+        #progress-bar-fill.complete {
+            background-color: #65d340; /* Verde (mesma cor do H2) */
+            border-radius: 8px; /* Arredonda tudo quando 100% */
+        }
+        
+        /* ... (Estilos de Detalhamento e Responsividade) ... */
+        #category-details { margin-top: 30px; }
         #category-details h3 {
             color: #0028a5;
             border-bottom: 1px solid #eee;
@@ -154,9 +153,7 @@
             padding: 12px 5px;
             border-bottom: 1px solid #f0f0f0;
         }
-        #category-list li:last-child { 
-            border-bottom: 0; 
-        }
+        #category-list li:last-child { border-bottom: 0; }
         #category-list span { 
             font-weight: bold; 
             color: #0028a5; 
@@ -165,12 +162,8 @@
             padding-left: 15px;
         }
 
-        /* --- Bloco de Responsividade (Mobile) --- */
         @media (max-width: 600px) {
-            body {
-                padding: 0;
-            }
-
+            body { padding: 0; }
             #portal-container {
                 padding: 15px;
                 margin: 0;
@@ -179,41 +172,28 @@
                 border-radius: 0;
                 height: 100vh;
                 overflow-y: auto;
-
                 display: flex;
                 flex-direction: column;
-                justify-content: center; /* centraliza verticalmente */
-                align-items: stretch;   /* ocupa a largura disponível (não centraliza horizontal) */
+                justify-content: center;
+                align-items: stretch;
             }
-
             #input-area {
                 flex-direction: column;
                 width: 100%;
                 align-items: stretch;
             }
-
-            #matricula,
-            #btn-buscar,
-            #results-area,
-            #total-card,
-            #category-details {
+            #matricula, #btn-buscar, #results-area, #total-card, #category-details {
                 width: 100%;
                 max-width: none;
             }
-
             h1 { font-size: 24px; }
             #total-card h2 { font-size: 30px; }
-
             #category-list li {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            #category-list span {
-                padding-left: 0;
-                margin-top: 5px;
-            }
+            #category-list span { padding-left: 0; margin-top: 5px; }
         }
-        
     </style>
 </head>
 <body>
@@ -237,7 +217,16 @@
                 <h2 id="total-horas">0 horas</h2>
                 <p id="status-aluno">Status: Pendente</p>
                 <p id="horas-faltantes" style="font-size: 14px; margin-top: 5px;"></p>
-            </div>
+                
+                <div id="progress-bar-label" class="sr-only">Progresso da meta de horas</div>
+                <div id="progress-bar-container" 
+                     aria-labelledby="progress-bar-label" 
+                     aria-valuemin="0" 
+                     aria-valuemax="140" 
+                     aria-valuenow="0">
+                    <div id="progress-bar-fill"></div>
+                </div>
+                </div>
             
             <div id="category-details">
                 <h3>Detalhamento por Categoria</h3>
@@ -248,10 +237,6 @@
     </main>
     
     <script>
-        //
-        // [ AÇÃO NECESSÁRIA ]
-        // Mantenha a URL da sua API /exec aqui
-        //
         const API_URL = "https://script.google.com/macros/s/AKfycbxf2Ku_PGhVFUwCq5tSAP9GFIy8-FAiQ7azmhNugwJDUtERJ9D3pheGfEAvc1FZ5ilZMA/exec";
 
         // Mapeamento dos elementos
@@ -265,7 +250,15 @@
         const horasFaltantesP = document.getElementById('horas-faltantes');
         const categoryListUl = document.getElementById('category-list');
 
-        // Adiciona listeners para o botão e para a tecla "Enter"
+        /* ==============================================
+        == NOVO JS: MAPEAMENTO DA BARRA
+        ==============================================
+        */
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+
+        // ... (Listeners 'click' e 'keydown') ...
         buscarBtn.addEventListener('click', buscarDados);
         matriculaInput.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
@@ -274,8 +267,8 @@
             }
         });
 
+        // ... (Função 'buscarDados' permanece a mesma) ...
         async function buscarDados() {
-            // [MELHORIA JS] Trocado 'var' por 'const'
             const matricula = matriculaInput.value.trim();
             if (!matricula) {
                 showError("Por favor, digite sua matrícula.");
@@ -284,26 +277,17 @@
 
             loadingDiv.style.display = 'block';
             errorDiv.style.display = 'none';
-            errorDiv.textContent = ''; // Limpa erros antigos
+            errorDiv.textContent = ''; 
             resultsDiv.style.display = 'none';
             buscarBtn.disabled = true; 
             buscarBtn.textContent = 'Buscando...';
 
             try {
                 const response = await fetch(`${API_URL}?matricula=${encodeURIComponent(matricula)}`, { cache: 'no-store' });
-                
-                if (!response.ok) {
-                    throw new Error(`Erro de rede: ${response.status} ${response.statusText}`);
-                }
-                
+                if (!response.ok) { throw new Error(`Erro de rede: ${response.status} ${response.statusText}`); }
                 const data = await response.json();
-
-                if (data && data.error) {
-                    throw new Error(data.message || 'Erro retornado pela API.');
-                }
-                
+                if (data && data.error) { throw new Error(data.message || 'Erro retornado pela API.'); }
                 showData(data || { totalGeral: 0, categorias: [], status: 'Desconhecido' });
-
             } catch (err) {
                 showError(err && err.message ? err.message : String(err));
             } finally {
@@ -318,35 +302,58 @@
             totalHorasH2.textContent = total + " horas";
             statusAlunoP.textContent = "Status: " + (data && data.status ? data.status : "Desconhecido");
             
-            // [MELHORIA JS] Trocado 'var' por 'const' e 'let'
             const meta = 140; 
+            
+            /*
+            ==============================================
+            == LÓGICA ATUALIZADA: BARRA DE PROGRESSO
+            ==============================================
+            */
+            // 1. Calcula a porcentagem
+            const percentage = (total / meta) * 100;
+            // 2. Limita a barra visual em 100% (mesmo que o aluno tenha mais horas)
+            const displayPercentage = Math.min(percentage, 100);
+            // 3. Arredonda a porcentagem para exibir
+            const roundedPercentage = Math.round(percentage);
+
+            // 4. Atualiza a largura da barra e o texto interno
+            progressBarFill.style.width = displayPercentage + '%';
+            progressBarFill.textContent = roundedPercentage + '%';
+            
+            // 5. Atualiza os atributos ARIA para leitores de tela
+            progressBarContainer.setAttribute('aria-valuemax', meta);
+            progressBarContainer.setAttribute('aria-valuenow', total);
+            
+            // 6. Atualiza o status (Faltam X horas / Meta atingida)
             if (total >= meta) {
                 horasFaltantesP.textContent = "Parabéns, você atingiu a meta!";
-                totalHorasH2.style.color = "#65d340"; 
+                totalHorasH2.style.color = "#65d340";
+                progressBarFill.classList.add('complete'); // Adiciona classe verde
             } else {
                 let faltantes = meta - total;
                 horasFaltantesP.textContent = "Faltam " + faltantes + " horas para a meta.";
                 totalHorasH2.style.color = "#0028a5";
+                progressBarFill.classList.remove('complete'); // Remove classe verde
             }
             
-            categoryListUl.innerHTML = ""; // Limpa a lista anterior
+            // ... (Restante da função para preencher a lista de categorias) ...
             
+            categoryListUl.innerHTML = ""; 
             const categorias = Array.isArray(data && data.categorias) ? data.categorias : [];
             
             if (categorias.length === 0) {
                 categoryListUl.innerHTML = "<li>Nenhuma hora computada ainda.</li>";
             } else {
                 categorias.forEach(function(cat) {
-                    // [MELHORIA DE SEGURANÇA] Usando textContent para evitar XSS
                     const li = document.createElement('li');
                     const nome = cat && cat.nome ? cat.nome : 'Categoria';
                     const horas = Number(cat && cat.horas) || 0;
                     
-                    li.textContent = nome + " "; // Adiciona o texto do nome
+                    li.textContent = nome + " ";
                     
                     const spanHoras = document.createElement('span');
                     spanHoras.textContent = horas + " horas";
-                    li.appendChild(spanHoras); // Adiciona o <span> ao <li>
+                    li.appendChild(spanHoras); 
                     
                     categoryListUl.appendChild(li);
                 });
@@ -355,11 +362,12 @@
             resultsDiv.style.display = 'block';
         }
         
+        // ... (Função 'showError' permanece a mesma) ...
         function showError(errorMsg) {
             loadingDiv.style.display = 'none';
             const msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
             
-            errorDiv.textContent = "Erro: " + msg; // Mensagem de erro mais direta
+            errorDiv.textContent = "Erro: " + msg;
             errorDiv.style.display = 'block';
         }
     </script>
