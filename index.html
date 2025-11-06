@@ -6,7 +6,7 @@
     <title>Portal de Horas CIESA</title>
     
     <style>
-        /* ... (Estilos Globais, Layout, Input, etc. - Sem mudanças) ... */
+        /* ... (Todos os estilos de CSS - permanecem os mesmos da v3) ... */
         *, *:before, *:after { box-sizing: border-box; }
         html, body { height: 100%; margin: 0; }
         body { 
@@ -86,17 +86,13 @@
         }
         #total-card p { margin: 0; font-size: 18px; color: #333; }
         
-        /* ==============================================
-        == ESTILOS DA BARRA DE PROGRESSO (CORRIGIDOS)
-        ==============================================
-        */
         #progress-bar-container {
             width: 100%;
             background-color: #e9ecef;
             border-radius: 8px;
             margin-top: 15px; 
             height: 22px;
-            overflow: hidden; /* Importante para conter a barra interna */
+            overflow: hidden;
             border: 1px solid #ddd;
         }
 
@@ -106,12 +102,9 @@
             background-color: #0028a5; 
             transition: width 0.5s ease-out, background-color 0.5s ease-out;
             
-            /* --- CORREÇÃO APLICADA --- */
             display: flex;
             align-items: center;
-            justify-content: center; /* MUDADO de flex-end para center */
-            /* padding-right: 8px; */ /* REMOVIDO */
-            /* border-radius: 0 8px 8px 0; */ /* REMOVIDO (desnecessário com overflow:hidden) */
+            justify-content: center; /* Centraliza o texto */
 
             color: white;
             font-size: 12px;
@@ -121,10 +114,9 @@
 
         #progress-bar-fill.complete {
             background-color: #65d340;
-            border-radius: 8px; /* Adiciona borda arredondada só em 100% */
+            border-radius: 8px;
         }
         
-        /* ... (Estilos de Detalhamento e Responsividade - Sem mudanças) ... */
         #category-details { margin-top: 30px; }
         #category-details h3 {
             color: #0028a5;
@@ -221,7 +213,7 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxf2Ku_PGhVFUwCq5tSAP9GFIy8-FAiQ7azmhNugwJDUtERJ9D3pheGfEAvc1FZ5ilZMA/exec";
 
-        // ... (Mapeamento dos elementos, incluindo a barra) ...
+        // ... (Mapeamento dos elementos - Sem mudanças) ...
         const matriculaInput = document.getElementById('matricula');
         const buscarBtn = document.getElementById('btn-buscar');
         const loadingDiv = document.getElementById('loading');
@@ -288,23 +280,20 @@
             const displayPercentage = Math.min(percentage, 100);
             const roundedPercentage = Math.round(percentage);
 
-            // Atualiza a largura
             progressBarFill.style.width = displayPercentage + '%';
             
             // --- CORREÇÃO APLICADA ---
-            // Só exibe o texto da porcentagem se for maior que 5%
-            // para não ficar espremido e feio.
-            if (displayPercentage > 5) {
+            // A imagem 2 (11%) ficou boa. A imagem 1 (3%) vazou.
+            // Vamos definir o limite para 10%.
+            if (displayPercentage > 10) {
                 progressBarFill.textContent = roundedPercentage + '%';
             } else {
                 progressBarFill.textContent = ''; // Esconde o texto
             }
             
-            // Atualiza ARIA
             progressBarContainer.setAttribute('aria-valuemax', meta);
             progressBarContainer.setAttribute('aria-valuenow', total);
             
-            // Atualiza status (cores, texto)
             if (total >= meta) {
                 horasFaltantesP.textContent = "Parabéns, você atingiu a meta!";
                 totalHorasH2.style.color = "#65d340";
