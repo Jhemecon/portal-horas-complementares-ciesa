@@ -468,7 +468,7 @@ h1 {
     }
 }
 
-/* Modo escuro (opcional) */
+/* Modo escuro (opcional) - VERSÃO CORRIGIDA */
 @media (prefers-color-scheme: dark) {
     :root {
         /* === Cores de Fundo e Borda === */
@@ -476,47 +476,25 @@ h1 {
         --cor-fundo-app: #2d2d2d;
         --cor-borda: #444;
 
-        /* === Cores de Texto (Redefinição) === */
-        --cor-texto: #e0e0e0;
-        --cor-texto-claro: #b0b0b0;
-        --cor-texto-muted: #999;
+        /* === Cores de Texto (A CORREÇÃO PRINCIPAL) === */
+        /* Redefine as variáveis originais com cores claras */
+        --cor-texto: #e0e0e0;        /* Texto principal (claro) */
+        --cor-texto-claro: #b0b0b0; /* Texto secundário (cinza claro) */
+        --cor-texto-muted: #999;    /* Texto "muted" (cinza médio) */
         
         /* === Cores Primárias (Azuis) === */
-        --cor-primaria: #3b82f6;
-        --cor-primaria-hover: #2563eb;
-        --cor-primaria-light: #1e3a8a;
+        /* Redefine as variáveis primárias com tons vibrantes */
+        --cor-primaria: #3b82f6;        /* Azul vibrante */
+        --cor-primaria-hover: #2563eb;  /* Hover do botão */
+        --cor-primaria-light: #1e3a8a;  /* Fundo do gradiente do card */
 
-        /* === Cores de Feedback === */
-        --cor-sucesso: #4ade80;
-        --cor-erro: #f87171;
-        --cor-erro-light: #450a0a;
+        /* === Cores de Feedback (Opcional, mas bom ter) === */
+        --cor-sucesso: #4ade80;        /* Verde claro */
+        --cor-erro: #f87171;          /* Vermelho claro */
+        --cor-erro-light: #450a0a;    /* Fundo do alerta de erro */
     }
     
-    /* * FORÇANDO A ATUALIZAÇÃO DO TEXTO
-     * (Isso é redundante, mas força o navegador a reler
-     * as variáveis de texto em caso de cache teimoso)
-    */
-    body {
-        color: var(--cor-texto);
-    }
-
-    #total-card p {
-        color: var(--cor-texto);
-    }
-    
-    #status-aluno {
-        color: var(--cor-texto-claro);
-    }
-    
-    #horas-faltantes {
-        color: var(--cor-texto-muted);
-    }
-    
-    .category-name {
-        color: var(--cor-texto);
-    }
-
-    /* Ajuste fino na sombra do foco */
+    /* Ajuste fino na sombra do foco para ser visível no escuro */
     #matricula:focus {
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
     }
