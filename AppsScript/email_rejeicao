@@ -1,0 +1,27 @@
+<div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: <?= corTextoPrincipal ?>; max-width: 600px; margin: auto; background-color: <?= corFundoEmail ?>; padding: 20px;">
+    
+    <div style="background-color: <?= corAzulCiesa ?>; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+        <img src="<?= linkLogo ?>" alt="Logo CIESA" style="max-width: 180px; height: auto;">
+    </div>
+
+    <div style="background-color: <?= corFundoCartao ?>; padding: 25px; border-radius: 0 0 8px 8px; border: 1px solid #ddd; border-top: 0;">
+
+        <p>Prezado(a) aluno(a) <b><?= nomeAluno ?></b>,</p>
+    
+        <p>Sua solicitação de horas complementares foi analisada e está com uma pendência <b style="color: <?= corLaranjaAlerta ?>; font-size: 16px;">(INDEFERIDA)</b>.</p>
+        
+        <h3 style="color: <?= corAzulCiesa ?>; border-bottom: 2px solid <?= corFundoEmail ?>; padding-bottom: 5px;">Motivo da Rejeição</h3>
+       
+        <p style="font-style: italic; border-left: 5px solid <?= corLaranjaAlerta ?>; padding: 15px; background-color: <?= corFundoEmail ?>; border-radius: 5px;">
+          <?= justificativa ?>
+        </p>
+        
+        <p>Por favor, verifique o motivo, corrija o que for necessário (ex: envie um novo certificado) e faça um novo envio pelo formulário.</p>
+        
+        
+        <p style="margin-top: 25px; font-size: 12px; color: #777;">
+            Atenciosamente,<br>
+            Coordenação do Curso
+        </p>
+    </div>
+</div>
