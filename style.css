@@ -468,58 +468,35 @@ h1 {
     }
 }
 
-/* Modo escuro (opcional) - CORRIGIDO v3 (Forçando texto claro) */
+/* Modo escuro (opcional) - Versão Definitiva */
 @media (prefers-color-scheme: dark) {
     :root {
-        /* Cores base do modo escuro */
+        /* === Cores de Fundo e Borda === */
         --cor-fundo-claro: #1a1a1a;
         --cor-fundo-app: #2d2d2d;
-        --cor-texto: #e0e0e0;        /* Texto principal (claro) */
-        --cor-texto-claro: #b0b0b0; /* Texto secundário (cinza) */
-        --cor-texto-muted: #999;    /* Texto "muted" (cinza mais escuro) */
         --cor-borda: #444;
 
-        /* Cores primárias (azuis vibrantes) */
-        --cor-primaria: #3b82f6;
-        --cor-primaria-hover: #2563eb;
-        --cor-primaria-light: #1e3a8a; /* Para o gradiente do card e hover da lista */
-    }
-    
-    body {
-        background-color: var(--cor-fundo-claro);
-        /* Garante que o texto padrão do body seja claro */
-        color: var(--cor-texto); 
-    }
-    
-    #portal-container {
-        background-color: var(--cor-fundo-app);
-        border-color: var(--cor-borda);
-    }
-    
-    #matricula {
-        background-color: #3a3a3a;
-        border-color: var(--cor-borda);
-        color: var(--cor-texto);
-    }
+        /* === Cores de Texto (A CORREÇÃO PRINCIPAL) === */
+        /* Redefine as variáveis originais com cores claras */
+        --cor-texto: #e0e0e0;        /* Texto principal (claro) */
+        --cor-texto-claro: #b0b0b0; /* Texto secundário (cinza claro) */
+        --cor-texto-muted: #999;    /* Texto "muted" (cinza médio) */
+        
+        /* === Cores Primárias (Azuis) === */
+        /* Redefine as variáveis primárias com tons vibrantes */
+        --cor-primaria: #3b82f6;        /* Azul vibrante */
+        --cor-primaria-hover: #2563eb;  /* Hover do botão */
+        --cor-primaria-light: #1e3a8a;  /* Fundo do gradiente do card */
 
+        /* === Cores de Feedback (Opcional, mas bom ter) === */
+        --cor-sucesso: #4ade80;        /* Verde claro */
+        --cor-erro: #f87171;          /* Vermelho claro */
+        --cor-erro-light: #450a0a;    /* Fundo do alerta de erro */
+    }
+    
+    /* Ajuste fino na sombra do foco para ser visível no escuro */
     #matricula:focus {
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
-    }
-
-    /* * CORREÇÃO ADICIONAL: 
-     * Força os textos de status e da lista a usarem
-     * as variáveis de texto claro do modo escuro.
-    */
-    #status-aluno {
-        color: var(--cor-texto-claro);
-    }
-    
-    #horas-faltantes {
-        color: var(--cor-texto-muted);
-    }
-    
-    .category-name {
-        color: var(--cor-texto);
     }
 }
 
