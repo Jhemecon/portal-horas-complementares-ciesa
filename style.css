@@ -468,28 +468,27 @@ h1 {
     }
 }
 
-/* Modo escuro (opcional) - CORRIGIDO */
+/* Modo escuro (opcional) - CORRIGIDO v3 (Forçando texto claro) */
 @media (prefers-color-scheme: dark) {
     :root {
-        /* Cores base do modo escuro (já estavam certas) */
+        /* Cores base do modo escuro */
         --cor-fundo-claro: #1a1a1a;
         --cor-fundo-app: #2d2d2d;
-        --cor-texto: #e0e0e0;
-        --cor-texto-claro: #b0b0b0;
-        --cor-texto-muted: #888;
+        --cor-texto: #e0e0e0;        /* Texto principal (claro) */
+        --cor-texto-claro: #b0b0b0; /* Texto secundário (cinza) */
+        --cor-texto-muted: #999;    /* Texto "muted" (cinza mais escuro) */
         --cor-borda: #444;
 
-        /* * CORREÇÃO: 
-         * Redefinimos as variáveis primárias que o CSS já usa.
-         * Damos a elas valores claros/vibrantes para contraste no escuro.
-        */
-        --cor-primaria: #3b82f6;        /* Azul vibrante (para títulos, botão, barra) */
-        --cor-primaria-hover: #2563eb;  /* Tom mais escuro para hover do botão */
-        --cor-primaria-light: #1e3a8a;  /* Fundo do gradiente do card e hover da lista */
+        /* Cores primárias (azuis vibrantes) */
+        --cor-primaria: #3b82f6;
+        --cor-primaria-hover: #2563eb;
+        --cor-primaria-light: #1e3a8a; /* Para o gradiente do card e hover da lista */
     }
     
     body {
         background-color: var(--cor-fundo-claro);
+        /* Garante que o texto padrão do body seja claro */
+        color: var(--cor-texto); 
     }
     
     #portal-container {
@@ -503,12 +502,24 @@ h1 {
         color: var(--cor-texto);
     }
 
-    /* * MELHORIA: 
-     * A sombra do foco do input ficaria invisível.
-     * Vamos dar a ela uma cor visível no modo escuro.
-    */
     #matricula:focus {
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Sombra azul clara */
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
+    }
+
+    /* * CORREÇÃO ADICIONAL: 
+     * Força os textos de status e da lista a usarem
+     * as variáveis de texto claro do modo escuro.
+    */
+    #status-aluno {
+        color: var(--cor-texto-claro);
+    }
+    
+    #horas-faltantes {
+        color: var(--cor-texto-muted);
+    }
+    
+    .category-name {
+        color: var(--cor-texto);
     }
 }
 
