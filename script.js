@@ -1,6 +1,6 @@
 // ============================================
 // PORTAL DE HORAS COMPLEMENTARES - CIESA
-// Versão melhorada com validações e cache
+// Versão 3.0 - Com toggle de tema e localStorage
 // ============================================
 
 // --- CONSTANTES E CONFIGURAÇÕES ---
@@ -14,6 +14,8 @@ const DEBOUNCE_DELAY = 300; // 300ms
 const cache = new Map();
 
 // --- ELEMENTOS DO DOM ---
+const bodyEl = document.body; // NOVO
+const themeToggleBtn = document.getElementById('theme-toggle'); // NOVO
 const matriculaInput = document.getElementById('matricula');
 const buscarBtn = document.getElementById('btn-buscar');
 const loadingDiv = document.getElementById('loading');
@@ -43,6 +45,26 @@ try {
     console.warn('localStorage não disponível:', e);
 }
 
+// Inicializa o tema (NOVA LÓGICA)
+(function initializeTheme() {
+    try {
+        const storedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (storedTheme === 'dark') {
+            bodyEl.classList.add('dark-mode');
+        } else if (storedTheme === 'light') {
+            bodyEl.classList.remove('dark-mode');
+        } else if (prefersDark) {
+            // Se não tem nada salvo, usa a preferência do sistema
+            bodyEl.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark'); // Salva para a próxima vez
+        }
+    } catch (e) {
+        console.warn('Erro ao inicializar tema:', e);
+    }
+})();
+
 // ============================================
 // EVENT LISTENERS
 // ============================================
@@ -70,6 +92,19 @@ matriculaInput.addEventListener('paste', (ev) => {
 matriculaInput.addEventListener('input', () => {
     if (errorDiv.style.display === 'block') {
         setUIState('idle');
+    }
+});
+
+// Listener do botão de tema (NOVO)
+themeToggleBtn.addEventListener('click', () => {
+    if (bodyEl.classList.contains('dark-mode')) {
+        // Mudar para Light Mode
+        bodyEl.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+    } else {
+        // Mudar para Dark Mode
+        bodyEl.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
     }
 });
 
@@ -400,8 +435,8 @@ function renderCategorias(categorias) {
 }
 
 // ============================================
-// LOG DE DEBUG (remover em produção)
+// LOG DE DEBUG
 // ============================================
 
 console.log('Portal de Horas CIESA carregado ✓');
-console.log('Versão: 2.0 - Melhorada com validações e cache');
+console.log('Versão: 3.0 - Toggle de tema');
