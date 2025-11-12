@@ -95,6 +95,7 @@ h1 {
     width: 100%;
     transition: border-color var(--transicao-padrao), box-shadow var(--transicao-padrao);
     background-color: var(--cor-fundo-app);
+    color: var(--cor-texto); /* Usa a cor do texto do :root */
 }
 
 #matricula:hover {
@@ -468,7 +469,7 @@ h1 {
     }
 }
 
-/* Modo escuro (opcional) - VERSÃO CORRIGIDA */
+/* Modo escuro (opcional) - VERSÃO FINAL COMPLETA */
 @media (prefers-color-scheme: dark) {
     :root {
         /* === Cores de Fundo e Borda === */
@@ -477,21 +478,30 @@ h1 {
         --cor-borda: #444;
 
         /* === Cores de Texto (A CORREÇÃO PRINCIPAL) === */
-        /* Redefine as variáveis originais com cores claras */
-        --cor-texto: #e0e0e0;        /* Texto principal (claro) */
-        --cor-texto-claro: #b0b0b0; /* Texto secundário (cinza claro) */
-        --cor-texto-muted: #999;    /* Texto "muted" (cinza médio) */
+        --cor-texto: #e0e0e0;
+        --cor-texto-claro: #b0b0b0;
+        --cor-texto-muted: #999;
         
         /* === Cores Primárias (Azuis) === */
-        /* Redefine as variáveis primárias com tons vibrantes */
-        --cor-primaria: #3b82f6;        /* Azul vibrante */
-        --cor-primaria-hover: #2563eb;  /* Hover do botão */
-        --cor-primaria-light: #1e3a8a;  /* Fundo do gradiente do card */
+        --cor-primaria: #3b82f6;
+        --cor-primaria-hover: #2563eb;
+        --cor-primaria-light: #1e3a8a;
 
-        /* === Cores de Feedback (Opcional, mas bom ter) === */
-        --cor-sucesso: #4ade80;        /* Verde claro */
-        --cor-erro: #f87171;          /* Vermelho claro */
-        --cor-erro-light: #450a0a;    /* Fundo do alerta de erro */
+        /* === Cores de Feedback === */
+        --cor-sucesso: #4ade80;
+        --cor-erro: #f87171;
+        --cor-erro-light: #450a0a;
+    }
+
+    /*
+     * CORREÇÃO FINAL:
+     * Força o campo da matrícula a ter o fundo escuro
+     * e a cor de texto clara.
+    */
+    #matricula {
+        background-color: #3a3a3a;
+        border-color: var(--cor-borda);
+        color: var(--cor-texto); /* Usa a cor de texto clara */
     }
     
     /* Ajuste fino na sombra do foco para ser visível no escuro */
