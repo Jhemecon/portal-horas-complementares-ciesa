@@ -468,9 +468,10 @@ h1 {
     }
 }
 
-/* Modo escuro (opcional) - COM CONTRASTE CORRIGIDO */
+/* Modo escuro (opcional) - CORRIGIDO */
 @media (prefers-color-scheme: dark) {
     :root {
+        /* Cores base do modo escuro (já estavam certas) */
         --cor-fundo-claro: #1a1a1a;
         --cor-fundo-app: #2d2d2d;
         --cor-texto: #e0e0e0;
@@ -478,12 +479,13 @@ h1 {
         --cor-texto-muted: #888;
         --cor-borda: #444;
 
-        /* * CORREÇÃO: Novas cores primárias para o Modo Escuro.
-         * Usamos um azul claro para texto e um azul mais vibrante para botões.
+        /* * CORREÇÃO: 
+         * Redefinimos as variáveis primárias que o CSS já usa.
+         * Damos a elas valores claros/vibrantes para contraste no escuro.
         */
-        --cor-primaria-texto-dark: #60a5fa;  /* Azul claro para textos e títulos */
-        --cor-primaria-btn-dark: #3b82f6;   /* Azul vibrante para botões */
-        --cor-primaria-btn-hover-dark: #2563eb; /* Hover do botão */
+        --cor-primaria: #3b82f6;        /* Azul vibrante (para títulos, botão, barra) */
+        --cor-primaria-hover: #2563eb;  /* Tom mais escuro para hover do botão */
+        --cor-primaria-light: #1e3a8a;  /* Fundo do gradiente do card e hover da lista */
     }
     
     body {
@@ -500,33 +502,13 @@ h1 {
         border-color: var(--cor-borda);
         color: var(--cor-texto);
     }
-    
-    #total-card {
-        /* CORREÇÃO: Gradiente de fundo um pouco mais azulado e sutil */
-        background: linear-gradient(135deg, #1e3a8a 0%, #2d2d2d 100%);
-    }
 
-    /* * CORREÇÃO: Aplica a cor de texto clara nos elementos principais.
-     * Esta é a principal correção de contraste.
+    /* * MELHORIA: 
+     * A sombra do foco do input ficaria invisível.
+     * Vamos dar a ela uma cor visível no modo escuro.
     */
-    h1,
-    #total-card h2,
-    #category-details h3,
-    .category-hours {
-        color: var(--cor-primaria-texto-dark);
-    }
-
-    /* * CORREÇÃO: Ajusta as cores do botão para o modo escuro,
-     * para que ele se destaque mais.
-    */
-    #btn-buscar {
-        background-color: var(--cor-primaria-btn-dark);
-        /* Remove a cor branca do texto para herdar a padrão (white) */
-        color: white; 
-    }
-
-    #btn-buscar:hover {
-        background-color: var(--cor-primaria-btn-hover-dark);
+    #matricula:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Sombra azul clara */
     }
 }
 
