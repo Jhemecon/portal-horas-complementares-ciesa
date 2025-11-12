@@ -1,9 +1,22 @@
+:root {
+    --cor-primaria: #0028a5;
+    --cor-primaria-hover: #001f80;
+    --cor-sucesso: #65d340;
+    --cor-erro: #d9534f;
+    --cor-fundo-claro: #f4f7f6;
+    --cor-borda: #ddd;
+    --cor-texto: #333;
+    --cor-texto-claro: #555;
+    --cor-fundo-app: #ffffff;
+    --raio-borda: 8px;
+}
+
 *, *:before, *:after { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: var(--cor-fundo-claro);
+    color: var(--cor-texto);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,13 +26,13 @@ body {
     max-width: 700px;
     width: 100%; 
     padding: 25px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background-color: var(--cor-fundo-app);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 h1 {
-    color: #0028a5;
+    color: var(--cor-primaria);
     text-align: center;
     border-bottom: 2px solid #eee;
     padding-bottom: 15px;
@@ -38,14 +51,14 @@ h1 {
 #btn-buscar {
     font-size: 16px;
     padding: 12px 20px;
-    background-color: #0028a5;
+    background-color: var(--cor-primaria);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
-#btn-buscar:hover { background-color: #001f80; }
+#btn-buscar:hover { background-color: var(--cor-primaria-hover); }
 #btn-buscar:disabled { background-color: #999; cursor: not-allowed; }
 .sr-only {
     position: absolute;
@@ -59,12 +72,12 @@ h1 {
     border: 0;
 }
 #status-message { text-align: center; font-size: 18px; padding: 10px 0; min-height: 28px; }
-#loading { color: #555; display: none; }
-#error { color: #d9534f; font-weight: bold; display: none; }
+#loading { color: var(--cor-texto-claro); display: none; }
+#error { color: var(--cor-erro); font-weight: bold; display: none; }
 #results-area { display: none; }
 #total-card {
-    background-color: #f4f7f6;
-    border: 1px solid #ddd;
+    background-color: var(--cor-fundo-claro);
+    border: 1px solid var(--cor-borda);
     padding: 20px;
     border-radius: 5px;
     text-align: center;
@@ -72,25 +85,31 @@ h1 {
 }
 #total-card h2 {
     margin: 0 0 10px 0;
-    color: #0028a5; 
+    color: var(--cor-primaria); 
     font-size: 36px;
 }
-#total-card p { margin: 0; font-size: 18px; color: #333; }
+#total-card p { margin: 0; font-size: 18px; color: var(--cor-texto); }
+
+/* Estilo que estava inline no HTML */
+#horas-faltantes {
+    font-size: 14px;
+    margin-top: 5px;
+}
 
 #progress-bar-container {
     width: 100%;
     background-color: #e9ecef;
-    border-radius: 8px;
+    border-radius: var(--raio-borda);
     margin-top: 15px; 
     height: 22px;
     overflow: hidden;
-    border: 1px solid #ddd;
+    border: 1px solid var(--cor-borda);
 }
 
 #progress-bar-fill {
     height: 100%;
     width: 0%; 
-    background-color: #0028a5; 
+    background-color: var(--cor-primaria); 
     transition: width 0.5s ease-out, background-color 0.5s ease-out;
     
     display: flex;
@@ -104,8 +123,8 @@ h1 {
 }
 
 #progress-bar-fill.complete {
-    background-color: #65d340;
-    border-radius: 8px;
+    background-color: var(--cor-sucesso);
+    border-radius: var(--raio-borda);
 }
 
 /* spinner simples */
@@ -114,7 +133,7 @@ h1 {
     width: 18px;
     height: 18px;
     border: 3px solid rgba(0,0,0,0.1);
-    border-top-color: #0028a5;
+    border-top-color: var(--cor-primaria);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     vertical-align: middle;
@@ -125,7 +144,7 @@ h1 {
 /* Detalhamento e Responsividade */
 #category-details { margin-top: 30px; }
 #category-details h3 {
-    color: #0028a5;
+    color: var(--cor-primaria);
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
 }
@@ -146,7 +165,7 @@ h1 {
 #category-list li:last-child { border-bottom: 0; }
 #category-list span { 
     font-weight: bold; 
-    color: #0028a5; 
+    color: var(--cor-primaria); 
     font-size: 16px;
     white-space: nowrap;
     padding-left: 15px;
