@@ -424,25 +424,17 @@ h1 {
 
 /* --- RESPONSIVIDADE MOBILE --- */
 @media (max-width: 600px) {
-    body { 
-        padding: 0; 
-        align-items: stretch;
-    }
+
+    /*
+     * CORREÇÃO: Removi as regras de 'body' e '#portal-container'
+     * que forçavam 100% da largura.
+     * Agora o 'body' vai usar o 'align-items: center' padrão
+     * e centralizar o card, resolvendo a sobreposição.
+     */
 
     #theme-toggle {
         top: 10px;
         right: 10px;
-    }
-    
-    #portal-container {
-        padding: 20px;
-        margin: 0;
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
     }
     
     h1 { 
@@ -574,7 +566,7 @@ body.dark-mode .spinner {
     #btn-buscar,
     #loading,
     #error {
-        display: none !important;
+        display: none !importante;
     }
     
     #portal-container {
