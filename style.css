@@ -1,0 +1,176 @@
+*, *:before, *:after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+#portal-container {
+    max-width: 700px;
+    width: 100%; 
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+h1 {
+    color: #0028a5;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+    margin-top: 0;
+    font-size: 28px;
+}
+#input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+#matricula {
+    flex-grow: 1; 
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%; 
+}
+#btn-buscar {
+    font-size: 16px;
+    padding: 12px 20px;
+    background-color: #0028a5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#btn-buscar:hover { background-color: #001f80; }
+#btn-buscar:disabled { background-color: #999; cursor: not-allowed; }
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+#status-message { text-align: center; font-size: 18px; padding: 10px 0; min-height: 28px; }
+#loading { color: #555; display: none; }
+#error { color: #d9534f; font-weight: bold; display: none; }
+#results-area { display: none; }
+#total-card {
+    background-color: #f4f7f6;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 20px;
+}
+#total-card h2 {
+    margin: 0 0 10px 0;
+    color: #0028a5; 
+    font-size: 36px;
+}
+#total-card p { margin: 0; font-size: 18px; color: #333; }
+
+#progress-bar-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    margin-top: 15px; 
+    height: 22px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+#progress-bar-fill {
+    height: 100%;
+    width: 0%; 
+    background-color: #0028a5; 
+    transition: width 0.5s ease-out, background-color 0.5s ease-out;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#progress-bar-fill.complete {
+    background-color: #65d340;
+    border-radius: 8px;
+}
+
+/* spinner simples */
+.spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-top-color: #0028a5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Detalhamento e Responsividade */
+#category-details { margin-top: 30px; }
+#category-details h3 {
+    color: #0028a5;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+#category-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 14px;
+    max-height: 250px; 
+    overflow-y: auto;
+}
+#category-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+#category-list li:last-child { border-bottom: 0; }
+#category-list span { 
+    font-weight: bold; 
+    color: #0028a5; 
+    font-size: 16px;
+    white-space: nowrap;
+    padding-left: 15px;
+}
+
+@media (max-width: 600px) {
+    body { padding: 0; }
+    #portal-container {
+        padding: 15px; margin: 0; border: none;
+        box-shadow: none; border-radius: 0; height: 100vh;
+        overflow-y: auto; display: flex; flex-direction: column;
+        justify-content: center; align-items: stretch;
+    }
+    #input-area {
+        flex-direction: column; width: 100%;
+        align-items: stretch;
+    }
+    #matricula, #btn-buscar, #results-area, #total-card, #category-details {
+        width: 100%; max-width: none;
+    }
+    h1 { font-size: 24px; }
+    #total-card h2 { font-size: 30px; }
+    #category-list li {
+        flex-direction: column; align-items: flex-start;
+    }
+    #category-list span { padding-left: 0; margin-top: 5px; }
+}
