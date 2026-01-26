@@ -4,7 +4,7 @@
 // ===============================================
 
 // --- CONSTANTES E CONFIGURAÇÕES ---
-const API_URL = "https://script.google.com/macros/s/AKfycbx3tyVS6Ljb_2V2W4170dfYAfl4QGEHopDu3Xh814hiJebWI16Ndo0-o5e5PNn8bpo5rQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz4ol0soRvZUUCApD0_WcvuvzDe5sLGDG4ZDuyOKxkksewwgNNUpVJRZd09MUHq9A1AJw/exec";
 const TIMEOUT_MS = 10000; // 10 segundos
 const META_HORAS = 140;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
