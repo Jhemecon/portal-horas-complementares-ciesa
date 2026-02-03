@@ -1,5 +1,5 @@
 // --- CONSTANTES E URL ---
-const API_URL = "https://script.google.com/macros/s/AKfycbyTBczCl5M4o_tpFtdU_hO_e81qe-hFgYmudYKvELBdlSok-EvzwjcUvNwf68ixHzSb/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxlV-Jlsm42UOouQXIWChkaQpzOU6P2-K4tFcii1yTxx-qoZPG5e79tO5vIY-qlwO6o0g/exec";
 const TIMEOUT_MS = 10000; // 10s
 const META_HORAS = 140;
 
