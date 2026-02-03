@@ -1,320 +1,203 @@
-// ===============================================
-// PORTAL DE HORAS COMPLEMENTARES - CIESA
-// Versão 3.0 - Com toggle de tema e localStorage
-// ===============================================
-
-// --- CONSTANTES E CONFIGURAÇÕES ---
+// --- CONSTANTES E URL ---
 const API_URL = "https://script.google.com/macros/s/AKfycbyTBczCl5M4o_tpFtdU_hO_e81qe-hFgYmudYKvELBdlSok-EvzwjcUvNwf68ixHzSb/exec";
-const TIMEOUT_MS = 10000; // 10 segundos
+const TIMEOUT_MS = 10000; // 10s
 const META_HORAS = 140;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
-const DEBOUNCE_DELAY = 300; // 300ms
 
-// --- CACHE EM MEMÓRIA ---
-const cache = new Map();
-
-// --- ELEMENTOS DO DOM ---
-const bodyEl = document.body; // NOVO
-const themeToggleBtn = document.getElementById('theme-toggle'); // NOVO
+// --- MAPEAMENTO DOS ELEMENTOS (DOM) ---
 const matriculaInput = document.getElementById('matricula');
 const buscarBtn = document.getElementById('btn-buscar');
 const loadingDiv = document.getElementById('loading');
 const errorDiv = document.getElementById('error');
 const resultsDiv = document.getElementById('results-area');
+const totalHorasH2 = document.getElementById('total-horas');
+const statusAlunoP = document.getElementById('status-aluno');
+const horasFaltantesP = document.getElementById('horas-faltantes');
+const categoryListUl = document.getElementById('category-list');
+const progressBarFill = document.getElementById('progress-bar-fill');
 
-// ==========================================
-// INICIALIZAÇÃO
-// ==========================================
+// --- ESTADO INICIAL E EVENTOS ---
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ Portal de Horas Complementares carregado');
-    console.log('🔗 API URL:', API_URL);
-    
-    // Carrega o tema salvo no localStorage
-    carregarTemaSalvo();
-    
-    // Event listeners
-    buscarBtn.addEventListener('click', handleBuscar);
-    matriculaInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleBuscar();
-    });
-    
-    // Event listener para o botão de toggle de tema
-    themeToggleBtn.addEventListener('click', alternarTema);
-    
-    // Foco automático no input
-    matriculaInput.focus();
+// Preenche com a última matrícula salva
+try {
+    const last = localStorage.getItem('lastMatricula');
+    if (last) matriculaInput.value = last;
+} catch (e) { /* ignorar erros de localStorage */ }
+
+// Ouvintes de eventos
+buscarBtn.addEventListener('click', buscarDados);
+matriculaInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); 
+        buscarDados();
+    }
 });
 
-// ==========================================
-// TEMA ESCURO/CLARO
-// ==========================================
+// Manipulador de "colar" modernizado
+matriculaInput.addEventListener('paste', (ev) => {
+    ev.preventDefault();
+    const text = (ev.clipboardData || window.clipboardData).getData('text').trim();
+    matriculaInput.value = text;
+});
+
+// --- LÓGICA DA APLICAÇÃO ---
 
 /**
- * Carrega o tema salvo no localStorage
+ * Gerencia o estado da interface (UI)
+ * @param {'idle' | 'loading' | 'success' | 'error'} state O estado desejado
  */
-function carregarTemaSalvo() {
-    const temaSalvo = localStorage.getItem('tema');
-    if (temaSalvo === 'escuro') {
-        bodyEl.classList.add('tema-escuro');
-        atualizarIconeTema(true);
+function setUIState(state) {
+    // Reseta todos os estados
+    loadingDiv.style.display = 'none';
+    errorDiv.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    
+    buscarBtn.disabled = false;
+    buscarBtn.textContent = 'Buscar';
+
+    // Aplica o estado específico
+    switch (state) {
+        case 'loading':
+            buscarBtn.disabled = true;
+            buscarBtn.textContent = 'Buscando...';
+            loadingDiv.style.display = 'block';
+            break;
+        case 'success':
+            resultsDiv.style.display = 'block';
+            break;
+        case 'error':
+            errorDiv.style.display = 'block';
+            break;
+        case 'idle':
+        default:
+            // Estado inicial, tudo escondido
+            break;
     }
 }
 
 /**
- * Alterna entre tema claro e escuro
+ * Busca os dados da API e controla o fluxo
  */
-function alternarTema() {
-    const isEscuro = bodyEl.classList.toggle('tema-escuro');
-    
-    // Salva no localStorage
-    localStorage.setItem('tema', isEscuro ? 'escuro' : 'claro');
-    
-    // Atualiza o ícone
-    atualizarIconeTema(isEscuro);
-    
-    // Feedback visual
-    themeToggleBtn.style.transform = 'rotate(360deg)';
-    setTimeout(() => {
-        themeToggleBtn.style.transform = 'rotate(0deg)';
-    }, 300);
-}
-
-/**
- * Atualiza o ícone do botão de tema
- */
-function atualizarIconeTema(isEscuro) {
-    themeToggleBtn.textContent = isEscuro ? '☀️' : '🌙';
-    themeToggleBtn.title = isEscuro ? 'Modo Claro' : 'Modo Escuro';
-}
-
-// ==========================================
-// BUSCA DE DADOS
-// ==========================================
-
-/**
- * Handler principal para busca de dados
- */
-async function handleBuscar() {
+async function buscarDados() {
     const matricula = matriculaInput.value.trim();
-    
-    // Validação
     if (!matricula) {
-        mostrarErro('Por favor, digite uma matrícula válida.');
+        showError("Por favor, digite sua matrícula.");
         matriculaInput.focus();
         return;
     }
-    
-    if (matricula.length < 3) {
-        mostrarErro('A matrícula deve ter pelo menos 3 caracteres.');
-        return;
-    }
-    
-    // Limpa estados anteriores
-    limparEstados();
-    
-    // Mostra loading
-    loadingDiv.style.display = 'flex';
-    buscarBtn.disabled = true;
-    
-    try {
-        const dados = await buscarDadosAluno(matricula);
-        exibirResultados(dados);
-    } catch (erro) {
-        console.error('Erro ao buscar dados:', erro);
-        mostrarErro(erro.message || 'Erro ao consultar dados. Tente novamente.');
-    } finally {
-        loadingDiv.style.display = 'none';
-        buscarBtn.disabled = false;
-    }
-}
 
-/**
- * Busca os dados do aluno na API
- */
-async function buscarDadosAluno(matricula) {
-    // Verifica cache
-    const cached = cache.get(matricula);
-    if (cached && (Date.now() - cached.timestamp < CACHE_DURATION)) {
-        console.log('✅ Dados carregados do cache');
-        return cached.data;
-    }
-    
-    const url = `${API_URL}?matricula=${encodeURIComponent(matricula)}`;
-    console.log('🔍 Buscando dados em:', url);
-    
+    try { 
+        localStorage.setItem('lastMatricula', matricula); 
+    } catch(e) { /* ignorar erros */ }
+
+    setUIState('loading');
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    
+
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            signal: controller.signal,
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
+        const url = `${API_URL}?matricula=${encodeURIComponent(matricula)}`;
+        const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
         
-        clearTimeout(timeoutId);
+        clearTimeout(timeoutId); // Limpa o timeout se a resposta chegou
         
-        console.log('📡 Status da resposta:', response.status);
-        
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('API não encontrada. Verifique a URL da implantação.');
-            }
-            throw new Error(`Erro na requisição: ${response.status} ${response.statusText}`);
+        if (!response.ok) { 
+            throw new Error(`Erro de rede: ${response.status} ${response.statusText}`); 
         }
         
-        const resultado = await response.json();
-        console.log('📦 Dados recebidos:', resultado);
+        const data = await response.json();
         
-        if (!resultado.sucesso) {
-            throw new Error(resultado.erro || 'Matrícula não encontrada.');
+        if (data && data.error) { 
+            throw new Error(data.message || 'Erro retornado pela API.'); 
         }
         
-        // Armazena no cache
-        cache.set(matricula, {
-            data: resultado.dados,
-            timestamp: Date.now()
-        });
+        // Sucesso
+        showData(data || { totalGeral: 0, categorias: [], status: 'Desconhecido' });
+        setUIState('success');
         
-        return resultado.dados;
+    } catch (err) {
+        // Tratamento de erros
+        clearTimeout(timeoutId); // Limpa o timeout em caso de erro também
+        let errorMsg = err.message || String(err);
         
-    } catch (erro) {
-        clearTimeout(timeoutId);
-        
-        if (erro.name === 'AbortError') {
-            throw new Error('Tempo limite excedido. Verifique sua conexão.');
+        if (err && err.name === 'AbortError') {
+            errorMsg = 'A requisição excedeu o tempo limite. Tente novamente.';
         }
         
-        throw erro;
+        showError(errorMsg);
     }
 }
 
-// ==========================================
-// EXIBIÇÃO DE RESULTADOS
-// ==========================================
-
 /**
- * Exibe os resultados na tela
+ * Exibe os dados formatados na tela
+ * @param {object} data Os dados recebidos da API
  */
-function exibirResultados(dados) {
-    const { nome, matricula, totalHoras, metaHoras, horasFaltantes, percentualConcluido, metaAtingida, categorias } = dados;
+function showData(data) {
+    const total = Number(data && data.totalGeral) || 0;
+    totalHorasH2.textContent = total + " horas";
+    statusAlunoP.textContent = "Status: " + (data && data.status ? data.status : "Desconhecido");
     
-    // Animação de entrada
-    resultsDiv.style.opacity = '0';
-    resultsDiv.style.display = 'block';
+    const percentage = (total / META_HORAS) * 100;
+    const displayPercentage = Math.min(percentage, 100);
+    const roundedPercentage = Math.round(percentage);
+
+    progressBarFill.style.width = displayPercentage + '%';
     
-    resultsDiv.innerHTML = `
-        <div class="resultado-card">
-            <div class="aluno-info">
-                <h2>👤 ${nome}</h2>
-                <p class="matricula-display">Matrícula: <strong>${matricula}</strong></p>
-            </div>
+    // Atualiza atributos ARIA
+    progressBarFill.setAttribute('aria-valuemin', '0');
+    progressBarFill.setAttribute('aria-valuemax', String(META_HORAS));
+    progressBarFill.setAttribute('aria-valuenow', String(Math.max(0, Math.min(total, META_HORAS))));
+    progressBarFill.setAttribute('aria-label', `Progresso: ${roundedPercentage} por cento`);
+
+    // Mostra texto na barra se couber
+    progressBarFill.textContent = displayPercentage > 10 ? roundedPercentage + '%' : '';
+    
+    // Feedback de conclusão
+    if (total >= META_HORAS) {
+        horasFaltantesP.textContent = "Parabéns, você atingiu a meta!";
+        totalHorasH2.style.color = "var(--cor-sucesso)"; // Usa variável CSS
+        progressBarFill.classList.add('complete'); 
+    } else {
+        let faltantes = META_HORAS - total;
+        horasFaltantesP.textContent = "Faltam " + faltantes + " horas para a meta.";
+        totalHorasH2.style.color = "var(--cor-primaria)"; // Usa variável CSS
+        progressBarFill.classList.remove('complete'); 
+    }
+    
+    // Preenche a lista de categorias
+    categoryListUl.innerHTML = ""; 
+    const categorias = Array.isArray(data && data.categorias) ? data.categorias : [];
+    
+    if (categorias.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = "Nenhuma hora computada ainda.";
+        categoryListUl.appendChild(li);
+    } else {
+        categorias.forEach(function(cat) {
+            const li = document.createElement('li');
+            const nome = cat && cat.nome ? cat.nome : 'Categoria';
+            const horas = Number(cat && cat.horas) || 0;
             
-            <div class="horas-resumo">
-                <div class="horas-box ${metaAtingida ? 'meta-atingida' : ''}">
-                    <div class="horas-numero">${totalHoras}</div>
-                    <div class="horas-label">Horas Computadas</div>
-                </div>
-                
-                <div class="horas-box horas-meta">
-                    <div class="horas-numero">${metaHoras}</div>
-                    <div class="horas-label">Meta Total</div>
-                </div>
-                
-                ${!metaAtingida ? `
-                <div class="horas-box horas-faltantes">
-                    <div class="horas-numero">${horasFaltantes}</div>
-                    <div class="horas-label">Horas Restantes</div>
-                </div>
-                ` : ''}
-            </div>
+            const nomeDiv = document.createElement('div');
+            nomeDiv.textContent = nome;
+            const spanHoras = document.createElement('span');
+            spanHoras.textContent = horas + " horas";
             
-            <div class="progresso-container">
-                <div class="progresso-header">
-                    <span>Progresso</span>
-                    <span class="progresso-percentual">${percentualConcluido}%</span>
-                </div>
-                <div class="progresso-barra">
-                    <div class="progresso-preenchimento ${metaAtingida ? 'completo' : ''}" 
-                         style="width: ${Math.min(percentualConcluido, 100)}%">
-                    </div>
-                </div>
-                ${metaAtingida ? `
-                    <div class="badge-sucesso">
-                        🎉 Parabéns! Meta atingida!
-                    </div>
-                ` : ''}
-            </div>
-            
-            ${categorias && categorias.length > 0 ? `
-                <div class="categorias-container">
-                    <h3>📚 Detalhamento por Categoria</h3>
-                    <div class="categorias-lista">
-                        ${categorias.map(cat => `
-                            <div class="categoria-item">
-                                <div class="categoria-nome">${cat.nome}</div>
-                                <div class="categoria-horas">${cat.horas}h</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
-        </div>
-    `;
+            li.appendChild(nomeDiv);
+            li.appendChild(spanHoras); 
+            categoryListUl.appendChild(li);
+        });
+    }
     
-    // Animação de fade in
-    setTimeout(() => {
-        resultsDiv.style.opacity = '1';
-    }, 10);
-}
-
-// ==========================================
-// ESTADOS E FEEDBACK
-// ==========================================
-
-/**
- * Mostra mensagem de erro
- */
-function mostrarErro(mensagem) {
-    errorDiv.textContent = mensagem;
-    errorDiv.style.display = 'block';
-    resultsDiv.style.display = 'none';
-    
-    // Auto-hide após 5 segundos
-    setTimeout(() => {
-        errorDiv.style.display = 'none';
-    }, 5000);
+    // Foca na área de resultados para acessibilidade
+    setTimeout(() => resultsDiv.focus(), 50);
 }
 
 /**
- * Limpa todos os estados visuais
+ * Exibe uma mensagem de erro
+ * @param {string} errorMsg A mensagem de erro
  */
-function limparEstados() {
-    errorDiv.style.display = 'none';
-    resultsDiv.style.display = 'none';
-    loadingDiv.style.display = 'none';
+function showError(errorMsg) {
+    const msg = errorMsg ? String(errorMsg).replace("Exception: ", "") : "Não foi possível conectar à API.";
+    errorDiv.textContent = "Erro: " + msg;
+    setUIState('error');
 }
-
-// ==========================================
-// UTILITÁRIOS
-// ==========================================
-
-/**
- * Limpa o cache (útil para debug)
- */
-function limparCache() {
-    cache.clear();
-    console.log('🗑️ Cache limpo');
-}
-
-// Expõe funções úteis para debug
-window.portalDebug = {
-    limparCache,
-    verCache: () => console.log(cache),
-    verAPI: () => console.log('API URL:', API_URL)
-};
-
-console.log('💡 Digite portalDebug no console para ver funções de debug');
