@@ -3,45 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portal de consulta de horas complementares do CIESA">
-    <meta name="theme-color" content="#0028a5">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
     <title>Portal de Horas CIESA</title>
     
-    <link rel="stylesheet" href="Site-Portal/style.css">
-    <script src="Site-Portal/script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    
-    <button id="theme-toggle" aria-label="Alternar modo claro/escuro" title="Alternar modo claro/escuro">
-        <span class="icon-light">☀️</span>
-        <span class="icon-dark">🌙</span>
-    </button>
     
     <main id="portal-container">
         <h1>Portal de Horas Complementares</h1>
         
         <div id="input-area">
             <label for="matricula" class="sr-only">Digite sua Matrícula</label>
-            <input 
-                type="text" 
-                id="matricula" 
-                placeholder="Digite sua Matrícula" 
-                inputmode="numeric" 
-                pattern="\d*" 
-                aria-label="Matrícula"
-                autocomplete="off"
-                spellcheck="false"
-                maxlength="20"
-            >
-            <button id="btn-buscar" type="button" aria-live="polite">Buscar</button>
+            <input type="text" id="matricula" placeholder="Digite sua Matrícula" inputmode="numeric" pattern="\d*" aria-label="Matrícula">
+            <button id="btn-buscar" type="button">Buscar</button>
         </div>
         
         <div id="status-message" aria-live="polite">
-            <div id="loading" role="status" aria-busy="false">
-                <span class="spinner" aria-hidden="true"></span>
-                Buscando dados...
-            </div>
+            <div id="loading" role="status"><span class="spinner" aria-hidden="true"></span>Buscando dados...</div>
             <div id="error" role="alert"></div>
         </div>
         
